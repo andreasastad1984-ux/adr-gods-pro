@@ -2,6 +2,7 @@ from pathlib import Path
 import shutil
 
 root = Path(".")
+
 files = {
     "root_build.gradle.kts": "build.gradle.kts",
     "app_build.gradle.kts": "app/build.gradle.kts",
@@ -19,6 +20,7 @@ files = {
     "res_mipmap_anydpi_v26_ic_launcher.xml": "app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
     "res_mipmap_anydpi_v26_ic_launcher_round.xml": "app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml",
 }
+
 for flat, dest_rel in files.items():
     src = root / flat
     dest = root / dest_rel
@@ -31,13 +33,17 @@ for flat, dest_rel in files.items():
         continue
     shutil.copy2(src, dest)
 
-for dens in ["mdpi","hdpi","xhdpi","xxhdpi","xxxhdpi"]:
-    for kind_flat, kind_dest in [("ic_launcher","ic_launcher.png"), ("ic_launcher_round","ic_launcher_round.png")]:
-        src = root / f"mipmap_{dens}_{kind_flat}.png"
-        dest = root / f"app/src/main/res/mipmap-{dens}/{kind_dest}"
+for dens in ["mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"]:
+    for flat_name, out_name in [
+        (f"mipmap_{dens}_adr_gods_pro_icon.png", "adr_gods_pro_icon.png"),
+        (f"mipmap_{dens}_adr_gods_pro_icon_round.png", "adr_gods_pro_icon_round.png"),
+    ]:
+        src = root / flat_name
+        dest = root / f"app/src/main/res/mipmap-{dens}/{out_name}"
         if not src.exists():
             print(f"Skipping missing icon: {src.name}")
             continue
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dest)
+
 print("Project reconstructed.")
